@@ -70,8 +70,8 @@ public class NthFibanocci {
     }
 
     //5. Using matrix  M={{1,1},{1,0}}
-    // Fn+1 = M^n
-    // TC -- >O(log n) sc--> O(n)
+    // Fn+1 = M^n = {{Fn+1, Fn},{Fn,Fn-1}}
+	// TC -- >O(log n) sc--> O(n)
     public static long nthFibanocci5(long n){
         long f[][] = {{1,1},{1,0}};
         int pow = ((int)n -1);
