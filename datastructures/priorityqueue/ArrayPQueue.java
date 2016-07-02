@@ -30,12 +30,16 @@ public class ArrayPQueue<T> implements IPriorityQueue {
         for (int i = noOfEles-1; i >=0 ; i--) {
 
             int x=((Comparable)(array[i])).compareTo((T)o);
-            if(x<0){
-                array[i+1]= array[i];
-            }else{
+            if(x > 0){
                 array[i+1]= (T)o;
                 noOfEles++;
                 break;
+            }else{
+                array[i+1]= array[i];
+                if(i==0){
+                    array[i]=(T)o;
+                    noOfEles++;
+                }
             }
         }
     }
@@ -54,5 +58,15 @@ public class ArrayPQueue<T> implements IPriorityQueue {
         for (int i = 0; i < noOfEles; i++) {
             System.out.print(array[i]+ "\t");
         }
+    }
+
+    @Override
+    public Object findMin() {
+        return array[noOfEles-1];
+    }
+
+    @Override
+    public int size() {
+        return noOfEles;
     }
 }

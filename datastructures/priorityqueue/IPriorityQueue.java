@@ -11,4 +11,6 @@ public interface IPriorityQueue <T>{
     public void add(T t);
     public T removeMin();
     public void display();
+    public T findMin();
+    public int size();
 }
