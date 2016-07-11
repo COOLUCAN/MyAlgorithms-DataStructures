@@ -1,9 +1,6 @@
-package GitHub.trunk.datastructures.trie;
+package com.algorithmica.datastructures.trie;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by chch0316 on 7/11/2016.
@@ -81,7 +78,64 @@ public class Trie {
             char c = entry.getKey();
             auxDisplay(entry.getValue(), s + c);
         }
+    }
 
+    public boolean searchWord(String word){
+        TrieNode current = root;
+        HashMap<Character, TrieNode> hmap = current.children;
+        int i = 0;
+        while (true){
+            if(word.length()==0||hmap.size()==0||!hmap.containsKey(word.charAt(0)))
+                return false;
+            current=hmap.get(word.charAt(0));
+            hmap= current.children;
+            if(word.length()==1&&current.isEndofWord)
+                return true;
+            if(word.length()==1)
+                return false;
+            else
+               word= word.substring(1);
+        }
+    }
+    public Queue<String> getWordsWithSamePrefix(String prefix){
+        Queue<String> queue;
+        TrieNode current = root;
+        String word=prefix;
+        HashMap<Character, TrieNode> hmap = current.children;
+        while (true){
+            if(prefix.length()==0||hmap.size()==0||!hmap.containsKey(word.charAt(0)))
+                return new LinkedList<String>();
+            current= hmap.get(word.charAt(0));
+            hmap=current.children;
+            if(word.length()==1){
+                queue = auxGetPrefixWords(current,prefix);
+                return queue;
+            }
+            else
+                word = word.substring(1);
+        }
+    }
+    public Queue<String> auxGetPrefixWords(TrieNode current,String prefix){
+        Queue<String> queue=new LinkedList<String>();
+        queue=auxGetPrefixWords(current,prefix,queue);
+        return queue;
+    }
+
+    private Queue<String> auxGetPrefixWords(TrieNode current,String s,Queue<String> queue){
+
+        HashMap<Character, TrieNode> hmap = current.children;
+        if(hmap.isEmpty()&&current.isEndofWord){
+            queue.add(s);
+            return queue;
+        }
+        if(current.isEndofWord) {
+            queue.add(s);
+        }
+        for (Map.Entry<Character,TrieNode> entry:hmap.entrySet()  ) {
+            char c= entry.getKey();
+            queue= auxGetPrefixWords(entry.getValue(),s+c,queue);
+        }
+        return queue;
     }
 
     public static void main(String[] args) {
@@ -91,9 +145,15 @@ public class Trie {
         trie.insert("cfgtyu");
         trie.insert("abc");
         trie.insert("abcd");
-        trie.insert("bdv");
+        trie.insert("bdv898");
         trie.insert("bdcf");
         trie.display();
+
+        System.out.println(trie.searchWord("bdv8"));
+        Queue<String> queue=trie.getWordsWithSamePrefix("b");
+        for (String s :queue   ) {
+            System.out.print(s+"\t");
+        }
 
     }
 }
