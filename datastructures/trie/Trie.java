@@ -1,4 +1,4 @@
-package com.algorithmica.datastructures.trie;
+package GitHub.trunk.datastructures.trie;
 
 import java.util.*;
 
@@ -44,7 +44,7 @@ public class Trie {
             if (!hmap.containsKey(word.charAt(0))) {
                 current = new TrieNode();
                 hmap.put(word.charAt(i), current);
-                //System.out.println(word.charAt(i)+" "+ i);
+
             } else {
                 current = hmap.get(word.charAt(0));
             }
@@ -56,7 +56,7 @@ public class Trie {
             hmap = current.children;
             word = word.substring(1);
         }
-        //display(root);
+
     }
 
     public void display() {
@@ -138,11 +138,52 @@ public class Trie {
         return queue;
     }
 
+    public boolean deleteWord(String word){
+        if(word.trim().length()==0)
+            return true;
+        if(searchWord(word)){
+            auxDelete(root,word);
+        }
+        return true;
+    }
+
+    private TrieNode auxDelete(TrieNode current,String word){
+        HashMap<Character, TrieNode> hmap = current.children;
+        TrieNode parent;
+
+        if (hmap.containsKey(word.charAt(0))) {
+            parent = current;
+            current = hmap.get(word.charAt(0));
+            hmap = current.children;
+
+            if (word.length() == 1) {
+                if (hmap.isEmpty() && current.isEndofWord) {
+                    if (parent.children.size() == 1) {
+                        parent.children.remove(word.charAt(0));
+                        return parent;
+                    } else {
+                        current.isEndofWord = false;
+                        return null;
+                    }
+                }
+                if ((!hmap.isEmpty()) && current.isEndofWord) {
+                    current.isEndofWord= false;
+                    return null;
+                }
+            }
+
+            word = word.substring(1);
+            parent= auxDelete(current,word);
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
         Trie trie = new Trie();
         trie.insert("xyz");
         trie.insert("aaa");
         trie.insert("cfgtyu");
+        trie.insert("cfgtyuyy");
         trie.insert("abc");
         trie.insert("abcd");
         trie.insert("bdv898");
@@ -150,10 +191,10 @@ public class Trie {
         trie.display();
 
         System.out.println(trie.searchWord("bdv8"));
-        Queue<String> queue=trie.getWordsWithSamePrefix("b");
-        for (String s :queue   ) {
-            System.out.print(s+"\t");
-        }
+        Queue<String> queue=trie.getWordsWithSamePrefix("cf");
+        System.out.println(queue);
 
+        trie.deleteWord("abcd");
+        trie.display();
     }
 }
